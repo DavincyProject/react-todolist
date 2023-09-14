@@ -1,12 +1,53 @@
 import { useEffect, useState } from 'react'
 import AddItem from './components/AddItem'
 import Button from './components/Button'
+import EditItem from './components/EditItem'
 import TodoFilter from "./components/TodoFilter"
 import TodoSearch from "./components/TodoSearch"
 
 
 function App() {
   const [todos, setTodos] = useState([])
+  const [edit, setEdit] = useState(false);
+  const [done, setDone] = useState(false);
+  const [editingTodo, setEditingTodo] = useState(null);
+
+  const checkDone = () => {
+    if (done) {
+      setDone("line-through text-red-600");
+    } else {
+      setDone("");
+    }
+  }
+
+  const handleEdit = (todoToEdit) => {
+    setEditingTodo(todoToEdit);
+  };
+
+  const handleSaveEdit = (editedText) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === editingTodo.id) {
+        return { ...todo, text: editedText };
+      }
+      return todo;
+    });
+
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+    setEditingTodo(null);
+    setTodos(updatedTodos);
+  };
+
+  const handleToggleDone = (todoId) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === todoId) {
+        return { ...todo, done: !todo.done };
+      }
+      return todo;
+    });
+
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+    setTodos(updatedTodos);
+  };
 
   useEffect(() => {
     // ambil data todo dari local storage saat komponen dimuat pertama kali
@@ -52,11 +93,23 @@ function App() {
             {todos.map((todo, index) => (
               <div className='flex justify-between border p-2 rounded-md' key={index}>
                 <div>
-                  <h1>{todo.text}</h1>
+                  {editingTodo && editingTodo.id === todo.id ? (
+                    <EditItem
+                      initialText={todo.text}
+                      onSaveEdit={(editedText) => handleSaveEdit(editedText)}
+                    />
+                  ) : (
+                    <h1 className={todo.done ? "line-through text-red-600" : ""}>{todo.text}</h1>
+                  )}
                 </div>
                 <div className='flex gap-1 items-center'>
-                  <input type="checkbox" />
-                  <a href=''>✏️</a>
+
+                  <input
+                    type="checkbox"
+                    checked={todo.done}
+                    onClick={() => handleToggleDone(todo.id)} />
+
+                  <a href='' onClick={() => handleEdit(todo)}>✏️</a>
                   <a href='' onClick={() => handleDeleteTodo(todo)}>🗑️</a>
                 </div>
               </div>
@@ -66,11 +119,11 @@ function App() {
       </section>
       {/* todo list end */}
 
-      <div className='flex gap-2'>
+      < div className='flex gap-2' >
         <Button text="Delete done tasks" bgColor="bg-red-500" />
         <Button onClick={handleDeleteAll} text="Delete all tasks" bgColor="bg-red-500" />
       </div>
-    </div>
+    </div >
   )
 }
 

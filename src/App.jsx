@@ -9,22 +9,16 @@ import TodoSearch from "./components/TodoSearch"
 function App() {
   const [todos, setTodos] = useState([])
   const [edit, setEdit] = useState(false);
-  const [done, setDone] = useState(false);
   const [editingTodo, setEditingTodo] = useState(null);
 
-  const checkDone = () => {
-    if (done) {
-      setDone("line-through text-red-600");
-    } else {
-      setDone("");
-    }
-  }
 
   const handleEdit = (todoToEdit) => {
     setEditingTodo(todoToEdit);
+    setEdit(true);
   };
 
   const handleSaveEdit = (editedText) => {
+    // Update tugas yang sesuai dalam state
     const updatedTodos = todos.map((todo) => {
       if (todo.id === editingTodo.id) {
         return { ...todo, text: editedText };
@@ -32,8 +26,13 @@ function App() {
       return todo;
     });
 
+    // Simpan perubahan ke localStorage
     localStorage.setItem('todos', JSON.stringify(updatedTodos));
+
+    // Set state untuk menonaktifkan mode pengeditan
+    setEdit(false);
     setEditingTodo(null);
+    // Update state dengan tugas yang telah diedit
     setTodos(updatedTodos);
   };
 
@@ -94,10 +93,12 @@ function App() {
               <div className='flex justify-between border p-2 rounded-md' key={index}>
                 <div>
                   {editingTodo && editingTodo.id === todo.id ? (
-                    <EditItem
-                      initialText={todo.text}
-                      onSaveEdit={(editedText) => handleSaveEdit(editedText)}
-                    />
+                    edit && (
+                      <EditItem
+                        editingTodo={editingTodo}
+                        onSaveEdit={(editedText) => handleSaveEdit(editedText)}
+                      />
+                    )
                   ) : (
                     <h1 className={todo.done ? "line-through text-red-600" : ""}>{todo.text}</h1>
                   )}
@@ -109,8 +110,8 @@ function App() {
                     checked={todo.done}
                     onClick={() => handleToggleDone(todo.id)} />
 
-                  <a href='' onClick={() => handleEdit(todo)}>✏️</a>
-                  <a href='' onClick={() => handleDeleteTodo(todo)}>🗑️</a>
+                  <button onClick={() => handleEdit(todo)}>✏️</button>
+                  <button onClick={() => handleDeleteTodo(todo)}>🗑️</button>
                 </div>
               </div>
             ))}

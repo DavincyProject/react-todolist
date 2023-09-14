@@ -3,21 +3,18 @@ import React, { useState } from 'react'
 export default function EditItem({ editingTodo, onSaveEdit }) {
     const [editText, setEditText] = useState(editingTodo.text);
 
-    const handleSaveClick = () => {
-        onSaveEdit(editingTodo.id, editText);
-    };
+    const handleSaveEdit = () => {
+        onSaveEdit(editText);
+    }
+
     const handleInputChange = (e) => {
         setEditText(e.target.value);
     }
 
-    const handleSaveEdit = (e) => {
-        onSaveEdit(editedTodo.id, editText);
-    }
-
     return (
-        <div>
-            <input type="text" value={editText} onChange={handleInputChange} />
-            <button onClick={handleSaveEdit}>Simpan</button>
+        <div className='flex gap-2'>
+            <input className="border rounded-md p-1 w-96" type="text" value={editText} onChange={handleInputChange} />
+            <button onClick={handleSaveEdit}>💾</button>
         </div>
     )
 }

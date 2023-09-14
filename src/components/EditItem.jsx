@@ -13,7 +13,7 @@ export default function EditItem({ editingTodo, onSaveEdit }) {
 
     return (
         <div className='flex gap-2'>
-            <input className="border rounded-md p-1 w-96" type="text" value={editText} onChange={handleInputChange} />
+            <input className="border rounded-md p-1 w-full" type="text" value={editText} onChange={handleInputChange} />
             <button onClick={handleSaveEdit}>💾</button>
         </div>
     )

@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react'
 
 export default function Button(props) {
-  const { className, text } = props;
+    const { bgColor, text, type, onClick } = props;
 
-  Button.defaultProps = {
-    className: "bg-blue-500 rounded mt-2 text-white font-medium w-64 h-8",
-  };
+    const className = `${bgColor} rounded mt-2 text-white font-medium w-full h-7`;
 
-  return <button className={className}>{text}</button>;
+    return (
+        <button onClick={onClick} type={type} className={className} >{text}</button>
+    )
 }

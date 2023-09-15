@@ -39,7 +39,7 @@ export default function AddItem({ addTodo }) {
                     <div className='flex flex-col w-auto'>
                         <div className="flex items-center gap-2">
                             📝<input
-                                placeholder='Input/Edit Todo'
+                                placeholder='Add Todo'
                                 className='border p-1 w-full'
                                 value={todoText}
                                 onChange={handleInputChange}>

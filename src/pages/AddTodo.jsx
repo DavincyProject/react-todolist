@@ -1,5 +1,14 @@
 import React from "react";
+import AddItem from "../components/AddItem";
 
 export default function AddTodo() {
-  return <div>AddTodo</div>;
+
+  const addTodo = () => {
+    const todosFromStorage = JSON.parse(localStorage.getItem('todos')) || [];
+    setTodos(todosFromStorage);
+  };
+
+  return <>
+    <AddItem addTodo={addTodo} />
+  </>;
 }

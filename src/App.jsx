@@ -10,7 +10,7 @@ function App() {
   const [todos, setTodos] = useState([])
   const [edit, setEdit] = useState(false);
   const [editingTodo, setEditingTodo] = useState(null);
-
+  const [searchText, setSearchText] = useState('');
 
   const handleEdit = (todoToEdit) => {
     setEditingTodo(todoToEdit);
@@ -70,10 +70,34 @@ function App() {
     setTodos([]);
   }
 
+  const handleDeleteDone = () => {
+    // Filter hanya tugas yang belum selesai (done: false)
+    const updatedTodos = todos.filter((todo) => !todo.done);
+
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+    setTodos(updatedTodos);
+  };
+
+  const handleSearch = () => {
+    setSearchText(searchText);
+  }
+
+  const filterTodos = () => {
+    if (searchText.trim() === '') {
+      // If the search text is empty, show all todos
+      return todos;
+    } else {
+      // Filter todos that contain the search text (case-insensitive)
+      return todos.filter((todo) =>
+        todo.text.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+  };
+
   return (
     <div className="container w-full/2 mx-auto p-4 border mt-5">
       <div className="mt-2 container-fluid mx-auto text-center">
-        <TodoSearch />
+        <TodoSearch setSearchText={setSearchText} onSearch={handleSearch} />
         <h1 className="text-3xl font-bold">
           Todo List
         </h1>
@@ -89,7 +113,7 @@ function App() {
       <section id='todo items'>
         <div className='container-fluid my-2'>
           <div className='flex flex-col gap-2'>
-            {todos.map((todo, index) => (
+            {filterTodos().map((todo, index) => (
               <div className='flex justify-between border p-2 rounded-md' key={index}>
                 <div>
                   {editingTodo && editingTodo.id === todo.id ? (
@@ -120,11 +144,11 @@ function App() {
       </section>
       {/* todo list end */}
 
-      < div className='flex gap-2' >
-        <Button text="Delete done tasks" bgColor="bg-red-500" />
+      <div className='flex gap-2' >
+        <Button onClick={handleDeleteDone} text="Delete done tasks" bgColor="bg-red-500" />
         <Button onClick={handleDeleteAll} text="Delete all tasks" bgColor="bg-red-500" />
       </div>
-    </div >
+    </div>
   )
 }
 
